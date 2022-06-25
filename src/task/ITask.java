@@ -17,9 +17,6 @@ public interface ITask<T> {
     }
     String getTaskName();
     String getTaskValue();
-    default Boolean getDebug(){
-        return false;
-    };
 
     /**
      * A task if complete if its objective
@@ -28,6 +25,8 @@ public interface ITask<T> {
      *
      */
     boolean isComplete();
+
+    void methodToCallback();
 
     /**
      * Does the actual work and returns

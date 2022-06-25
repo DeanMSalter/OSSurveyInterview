@@ -1,7 +1,9 @@
 package util.tasks;
 
 import task.ITask;
+import task.ITaskCallBack;
 
+import javax.security.auth.callback.Callback;
 import java.io.File;
 
 
@@ -15,10 +17,9 @@ public class FileCheckerTask implements ITask<Boolean>{
     private final String fileName;
     private int timesToRun = 10;
     private int sleepMillis = 1000;
+    private ITaskCallBack callback;
     private Boolean isComplete = false;
 
-    //If you want to disable the print messages set this to false
-    private Boolean debug = true;
     public FileCheckerTask(String fileName) {
         this.fileName = fileName;
     }
@@ -27,9 +28,11 @@ public class FileCheckerTask implements ITask<Boolean>{
         this.timesToRun = timesToRun;
         this.sleepMillis = sleepMillis;
     }
-    @Override
-    public Boolean getDebug() {
-        return debug;
+    public FileCheckerTask(String fileName, int timesToRun, int sleepMillis, ITaskCallBack callback) {
+        this.fileName = fileName;
+        this.timesToRun = timesToRun;
+        this.sleepMillis = sleepMillis;
+        this.callback = callback;
     }
     @Override
     public String getTaskName(){
@@ -55,6 +58,15 @@ public class FileCheckerTask implements ITask<Boolean>{
     public boolean isComplete() {
         return this.isComplete;
     }
+
+    @Override
+    public void methodToCallback() {
+        if (this.callback == null){
+            return;
+        }
+        this.callback.handleAction();
+    }
+
 
     @Override
     public Boolean call() {

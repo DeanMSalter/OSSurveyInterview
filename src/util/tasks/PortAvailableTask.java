@@ -1,6 +1,7 @@
 package util.tasks;
 
 import task.ITask;
+import task.ITaskCallBack;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -15,9 +16,10 @@ public class PortAvailableTask implements ITask<Boolean>{
     private final int port;
     private int timesToRun = 10;
     private int sleepMillis = 1000;
+    private ITaskCallBack callback;
+
     private Boolean isComplete = false;
     //If you want to disable the print messages set this to false
-    public Boolean debug = true;
 
     public PortAvailableTask(int port) {
         this.port = port;
@@ -27,9 +29,11 @@ public class PortAvailableTask implements ITask<Boolean>{
         this.timesToRun = timesToRun;
         this.sleepMillis = sleepMillis;
     }
-    @Override
-    public Boolean getDebug() {
-        return debug;
+    public PortAvailableTask(int port, int timesToRun, int sleepMillis, ITaskCallBack callback) {
+        this.port = port;
+        this.timesToRun = timesToRun;
+        this.sleepMillis = sleepMillis;
+        this.callback = callback;
     }
     @Override
     public boolean isComplete() {
@@ -52,7 +56,13 @@ public class PortAvailableTask implements ITask<Boolean>{
     public String getTaskValue() {
         return String.valueOf(this.port);
     }
-
+    @Override
+    public void methodToCallback() {
+        if (this.callback == null){
+            return;
+        }
+        this.callback.handleAction();
+    }
     //Source for port checking code:
     //http://svn.apache.org/viewvc/camel/trunk/components/camel-test/src/main/java/org/apache/camel/test/AvailablePortFinder.java?view=markup#l130
     @Override
@@ -65,7 +75,7 @@ public class PortAvailableTask implements ITask<Boolean>{
             ss.setReuseAddress(true);
             ds = new DatagramSocket(port);
             ds.setReuseAddress(true);
-            isComplete = true;
+            this.isComplete = true;
             return true;
             //Not a huge fan of using try/catches for this type of thing
         } catch (IOException e) {
