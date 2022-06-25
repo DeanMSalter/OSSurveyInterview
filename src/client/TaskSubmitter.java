@@ -42,6 +42,8 @@ public class TaskSubmitter {
         //TODO: better error handling to enable restarting on fail
         //TODO: comments and javadocs
         //TODO: do something if true?
+        //TODO: deal with eclipse not liking ANSI
+        // https://stackoverflow.com/questions/6286701/an-eclipse-console-view-that-respects-ansi-color-codes
 
         reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Welcome to multithreading interview exercise.");
