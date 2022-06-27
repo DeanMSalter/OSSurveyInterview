@@ -11,7 +11,10 @@ import java.io.File;
  *
  * Checks if the passed in file name exists
  *
- * @param <T>
+ * @param fileName - the filename/path to check existence of
+ * @param timesToRun - the amount of times to run the task
+ * @param sleepMillis - the delay between each run
+ * @param callback - the function to run on completion of the run
  */
 public class FileCheckerTask implements ITask<Boolean>{
     private final String fileName;

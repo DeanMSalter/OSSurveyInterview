@@ -30,13 +30,11 @@ public class TaskSubmitter {
     static BufferedReader reader;
 
     /**
-     * Creates two tasks and submits them to the TaskRunner.
+     * Handler of all tasks that are then submitted to be exectuted.
+     * Takes user input or can be hard coded.
      * @param args
      */
     public static void main(String[] args) {
-        //TODO: general validation for user input, starting from scratch etc
-        //TODO: better error handling to enable restarting on fail
-        //TODO: comments and javadocs
         reader = new BufferedReader(new InputStreamReader(System.in));
         //each taskRunner instance contains a list of the tasks and has its own thread pool ,
         // so to run a fresh set of tasks you would want to create a new instance of taskRunner.
@@ -54,7 +52,7 @@ public class TaskSubmitter {
         String pathForFiles = System.getProperty("user.dir");
 
 
-        System.out.println("\n   --Welcome to multithreading interview exercise.--   \n");
+        System.out.println("\n\n   --Welcome to multithreading interview exercise.--   \n");
         //wasn't sure if user input was needed or just programmatically so just added a basic interface
         String requestedMode = takeInput(reader, "To add a specific tasks press (1) , to run a demo mix of tasks please enter (2)");
 
@@ -76,17 +74,19 @@ public class TaskSubmitter {
         } else if ("1".equals(requestedMode)) {
             while(true) {
                 taskRunner.addTask(addTask());
-                String doneAddingInput = takeInput(reader, "Are you done adding tasks? y, n");
-                if ("y".equals(doneAddingInput)) {
+                String doneAddingInput = takeInput(reader, "Do you want to add another tasks? y, n");
+                if ("n".equalsIgnoreCase(doneAddingInput)) {
                     break;
-                } else if (!"n".equals(doneAddingInput)) {
+                } else if (!"y".equalsIgnoreCase(doneAddingInput)) {
                     System.out.println("Invalid input, please try again.");
+                    main(null);
                     break;
                 }
             }
             mappedFutures = taskRunner.runTasks();
         } else {
             System.out.println("Invalid input, please try again.");
+            main(null);
         }
         Instant before = Instant.now();
         //endregion
@@ -95,9 +95,10 @@ public class TaskSubmitter {
         HashMap<ITask<?>, String> taskResults = new HashMap<>();
         if (mappedFutures == null) {
             System.out.println("could not find any futures, did the tasks run successfully?");
+            main(null);
             return;
         }
-        for ( ITask task : mappedFutures.keySet() ) {
+        for ( ITask<?> task : mappedFutures.keySet() ) {
             try {
                 Future<?> future = mappedFutures.get(task);
                 //Calling .get here is a blocking operation which means we are waiting until all tasks are done before this for loop is done and we print the results
@@ -118,11 +119,22 @@ public class TaskSubmitter {
         for ( ITask task : taskResults.keySet() ) {
             System.out.println("【【【 " + task.getTaskName() + " V:" + task.getTaskValue() + " S:" + task.getSleepMillis() + " T:" + task.getTimesToRun() + " result = " + taskResults.get(task) + " 】】】");
         }
-
+        String startAgain = takeInput(reader, "Do you want to start again? y,n");
+        if ("n".equalsIgnoreCase(startAgain)) {
+            return;
+        } else if (!"y".equalsIgnoreCase(startAgain)) {
+            System.out.println("Invalid input, please try again.");
+            main(null);
+            return;
+        }
+        main(null);
         //endregion
     }
 
     //Would probably extract this to its own addTask class, so it could be replaced with a gui or something like that.
+    /**
+     * Handles user input for creating a task
+     */
     private static ITask<?> addTask(){
         String whichTaskInput = takeInput(reader, "which task would you like to add? (3) for file test , (4) for port check");
         if ("3".equals(whichTaskInput)) {
@@ -134,9 +146,15 @@ public class TaskSubmitter {
             String[] fileTestParams = fileTestInput.split(",");
             return new PortAvailableTask(Integer.parseInt(fileTestParams[0]), Integer.parseInt(fileTestParams[1]), Integer.parseInt(fileTestParams[2]));
         }
+        System.out.println("Invalid input, please try again.");
+        main(null);
         return null;
     }
-
+    /**
+     * Handler for accepting text input from console
+     * @param reader - the reader used to accept the user input
+     * @param message - the message to display to the user as a prompt
+     */
     private static String takeInput(BufferedReader reader, String message){
         try {
             if (!message.isBlank()) {

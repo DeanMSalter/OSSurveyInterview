@@ -11,7 +11,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-
+/**
+ *
+ * Checks if the provided port is available
+ *
+ * @param port - the port to check availability
+ * @param timesToRun - the amount of times to run the task
+ * @param sleepMillis - the delay between each run
+ * @param callback - the function to run on completion of the run
+ */
 public class PortAvailableTask implements ITask<Boolean>{
     private final int port;
     private int timesToRun = 10;

@@ -31,15 +31,30 @@ public class TaskRunner {
     private ExecutorService executorService;
 
     //Using a simplified builder pattern to make adding multiple tasks easier.
+    /**
+     * adds a task to the list of tasks to be run later.
+     * Returns the instance of TaskRunner
+     * @param task - the task to be added
+     */
     public <V> TaskRunner addTask(ITask<V> task){
+        if (task == null) {
+            System.out.println("no task provided");
+            main(null);
+            return null;
+        }
         this.tasks.add(task);
         return this;
     }
 
     //moved tasks to one list and a group running as seems like it would be more useful in a real world situation as you would be able to queue up a bunch of tasks and have them run in the background.
+    /**
+     * runs all the tasks that have been added to the tasks list.
+     * Returns a Hashmap of tasks and their futures
+     */
     public HashMap<ITask<?>,Future<?>> runTasks(){
         if (tasks.size() == 0) {
             System.out.println("No tasks added to run. Please add tasks using .addTask()");
+            main(null);
             return null;
         }
         //assumed we wanted a fixed amount of threads as opposed to single threading or cached threads. Set a maximum amount as could cause performance problems with large amount of threads.
@@ -57,7 +72,10 @@ public class TaskRunner {
         this.executorService.shutdown();
         return mappedFutures;
     }
-
+    /**
+     * runs a task the given amount of times with the given delay between each run and returns the Future of that task
+     * @param task - the task to be run
+     */
     private <V> Future<V> runTaskAsync(ITask<V> task) {
         System.out.println("♦♦♦♦♦ " + task.getTaskName() + " '" +  task.getTaskValue() + "' with " + task.getTimesToRun() + " attempts and " + task.getSleepMillis() + " delay" + " max time this should take: " + task.getTimesToRun() * task.getSleepMillis() + " milliseconds ♦♦♦♦♦");
         //submits the task as a callable to a new thread
