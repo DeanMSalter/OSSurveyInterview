@@ -139,7 +139,8 @@ public class TaskSubmitter {
     private static ITask<?> addTask(){
         String whichTaskInput = takeInput(reader, "which task would you like to add? (3) for file test , (4) for port check");
         if ("3".equals(whichTaskInput)) {
-            String fileTestInput = takeInput(reader, "please enter the file path for the file you wish to check, then a comma, then the attempts , then the delay.");
+            String fileTestInput = takeInput(reader, "please enter the file path for the file you wish to check, then a comma, then the attempts , then the delay. An example: \n" +
+                    "C:\\Users\\Dean\\Desktop\\multithreading.jpg,10,1000");
             String[] fileTestParams = fileTestInput.split(",");
             return new FileCheckerTask(fileTestParams[0], Integer.parseInt(fileTestParams[1]), Integer.parseInt(fileTestParams[2]));
         } else if ("4".equals(whichTaskInput)) {
