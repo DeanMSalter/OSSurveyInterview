@@ -134,6 +134,7 @@ public class TaskSubmitter {
     //Would probably extract this to its own addTask class, so it could be replaced with a gui or something like that.
     /**
      * Handles user input for creating a task
+     * @return the task to be added
      */
     private static ITask<?> addTask(){
         String whichTaskInput = takeInput(reader, "which task would you like to add? (3) for file test , (4) for port check");
@@ -154,6 +155,7 @@ public class TaskSubmitter {
      * Handler for accepting text input from console
      * @param reader - the reader used to accept the user input
      * @param message - the message to display to the user as a prompt
+     * @return the string the user inputted
      */
     private static String takeInput(BufferedReader reader, String message){
         try {

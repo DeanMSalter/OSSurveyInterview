@@ -33,8 +33,8 @@ public class TaskRunner {
     //Using a simplified builder pattern to make adding multiple tasks easier.
     /**
      * adds a task to the list of tasks to be run later.
-     * Returns the instance of TaskRunner
      * @param task - the task to be added
+     * @return the instance of TaskRunner
      */
     public <V> TaskRunner addTask(ITask<V> task){
         if (task == null) {
@@ -49,7 +49,7 @@ public class TaskRunner {
     //moved tasks to one list and a group running as seems like it would be more useful in a real world situation as you would be able to queue up a bunch of tasks and have them run in the background.
     /**
      * runs all the tasks that have been added to the tasks list.
-     * Returns a Hashmap of tasks and their futures
+     * @return a Hashmap of tasks and their futures
      */
     public HashMap<ITask<?>,Future<?>> runTasks(){
         if (tasks.size() == 0) {
@@ -73,8 +73,9 @@ public class TaskRunner {
         return mappedFutures;
     }
     /**
-     * runs a task the given amount of times with the given delay between each run and returns the Future of that task
+     * runs a task the given amount of times with the given delay between each run
      * @param task - the task to be run
+     * @return returns the Future of that task
      */
     private <V> Future<V> runTaskAsync(ITask<V> task) {
         System.out.println("♦♦♦♦♦ " + task.getTaskName() + " '" +  task.getTaskValue() + "' with " + task.getTimesToRun() + " attempts and " + task.getSleepMillis() + " delay" + " max time this should take: " + task.getTimesToRun() * task.getSleepMillis() + " milliseconds ♦♦♦♦♦");

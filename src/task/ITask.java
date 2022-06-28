@@ -10,24 +10,24 @@ public interface ITask<T> {
     int sleepMillis = 1000;
 
     /**
-     * gets the amount of times to run the task, returns the default amount if none is provided
+     * @return the amount of times to run the task, returns the default amount if none is provided
      */
     default int getTimesToRun(){
         return this.timesToRun;
     }
     /**
-     * gets the delay between runs for the task, returns the default amount if none is provided
+     * @return the delay between runs for the task, returns the default amount if none is provided
      */
     default int getSleepMillis(){
         return this.sleepMillis;
     }
     /**
-     * gets the name of the task , mainly used for printing pretty
+     * @return the name of the task , mainly used for printing pretty
      */
     String getTaskName();
     //this would probably be renamed or moved as other tasks may not need a value
     /**
-     * gets the value provided for the task
+     * @return the value provided for the task
      */
     String getTaskValue();
 
@@ -35,7 +35,7 @@ public interface ITask<T> {
      * A task if complete if its objective
      * has been met through an invokation
      * of the 'call' method.
-     *
+     * @return whether the task is returned or not
      */
     boolean isComplete();
 
@@ -47,7 +47,7 @@ public interface ITask<T> {
     /**
      * Does the actual work and returns
      * a result.
-     *
+     * @return the result from the task
      */
     T call();
 }
